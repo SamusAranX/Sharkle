@@ -3,10 +3,115 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sharkle"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        xmlns:local="clr-namespace:Sharkle" xmlns:sharkle="clr-name"
+        mc:Ignorable="d" UseLayoutRounding="True" Background="Transparent" AllowsTransparency="True"
+        Title="MainWindow" Height="260" Width="240" ResizeMode="NoResize" WindowStyle="None" Topmost="True"
+		Loaded="Window_Loaded" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="SharkleImages.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<DropShadowEffect x:Key="SharkleShadow" Color="Black" Opacity="0.5" BlurRadius="8" Direction="270" ShadowDepth="3" />
+
+			<SineEase x:Key="SharkleEase" EasingMode="EaseInOut" />
+
+			<Storyboard x:Key="SharkleBubbleFlickerAnim" FillBehavior="Stop" RepeatBehavior="Forever">
+				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleBubble1" Storyboard.TargetProperty="Visibility">
+					<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+					<DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="{x:Static Visibility.Hidden}" />
+				</ObjectAnimationUsingKeyFrames>
+
+				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleBubble2" Storyboard.TargetProperty="Visibility" BeginTime="0:0:0.4">
+					<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+					<DiscreteObjectKeyFrame KeyTime="0:0:0.4" Value="{x:Static Visibility.Hidden}" />
+				</ObjectAnimationUsingKeyFrames>
+			</Storyboard>
+
+			<Storyboard x:Key="SharkleShowBubblesAnim">
+				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleBubbles" Storyboard.TargetProperty="Visibility">
+					<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}" />
+					<DiscreteObjectKeyFrame KeyTime="0:0:2" Value="{x:Static Visibility.Hidden}" />
+				</ObjectAnimationUsingKeyFrames>
+			</Storyboard>
+
+			<Storyboard x:Key="SharkleLegsIdleAnim">
+				<!-- Body bobbing up and down -->
+				<DoubleAnimation Storyboard.TargetName="SharkleBodyIdle" Storyboard.TargetProperty="(Canvas.Top)" To="16"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+				<DoubleAnimation Storyboard.TargetName="SharkleHatFinsIdle" Storyboard.TargetProperty="(Canvas.Top)" To="6"
+					Duration="0:0:0.4" BeginTime="0:0:0.1" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+
+				<!-- Animating the legs' start points -->
+				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[0].StartPoint" To="70, 155"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[1].StartPoint" To="93, 155"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+
+				<!-- Animating the knees bending -->
+				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[0].Segments[0].Point1" To="50, 170"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[1].Segments[0].Point1" To="73, 170"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+			</Storyboard>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Window.Triggers>
+		<EventTrigger RoutedEvent="Loaded">
+			<BeginStoryboard Storyboard="{StaticResource SharkleLegsIdleAnim}" />
+			<BeginStoryboard x:Name="SharkleBubbleFlickerStoryboard" Storyboard="{StaticResource SharkleBubbleFlickerAnim}" />
+		</EventTrigger>
+		<EventTrigger RoutedEvent="MouseLeftButtonDown">
+			<SeekStoryboard BeginStoryboardName="SharkleBubbleFlickerStoryboard" Offset="0:0:0" Origin="BeginTime" />
+			<BeginStoryboard Storyboard="{StaticResource SharkleShowBubblesAnim}" />
+		</EventTrigger>
+	</Window.Triggers>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="190" />
+			<RowDefinition Height="14" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition Width="140" />
+		</Grid.ColumnDefinitions>
+
+		<Canvas x:Name="SharkleBubbles" Effect="{StaticResource SharkleShadow}" Visibility="Hidden">
+			<Image x:Name="SharkleBubble1" Source="{StaticResource SharkleBubble1}" Visibility="Hidden" />
+			<Image x:Name="SharkleBubble2" Source="{StaticResource SharkleBubble2}" Visibility="Hidden" Canvas.Left="9" Canvas.Top="9" />
+		</Canvas>
+
+		<Canvas x:Name="SharkleIdle" Effect="{StaticResource SharkleShadow}" Grid.Row="1" Grid.Column="1">
+			<Canvas.Triggers>
+				<EventTrigger RoutedEvent="MouseDown">
+					
+				</EventTrigger>
+			</Canvas.Triggers>
+
+			<Image x:Name="SharkleBodyIdle" Source="{StaticResource SharkleBodyIdle}" Canvas.Left="3" Canvas.Top="11" />
+			<Image x:Name="SharkleHatFinsIdle" Source="{StaticResource SharkleHatFinsIdle}" Canvas.Left="35" Canvas.Top="-1" />
+			<Path x:Name="SharkleLegsIdle" Stroke="{DynamicResource SharkleFillBrush}" StrokeThickness="4" StrokeEndLineCap="Round" StrokeStartLineCap="Round" StrokeLineJoin="Round">
+				<Path.Data>
+					<PathGeometry>
+						<PathFigure StartPoint="70,150">
+							<PathFigure.Segments>
+								<QuadraticBezierSegment Point1="70,170" Point2="70,186" />
+								<LineSegment Point="60,186" />
+							</PathFigure.Segments>
+						</PathFigure>
+
+						<PathFigure StartPoint="93,150">
+							<PathFigure.Segments>
+								<QuadraticBezierSegment Point1="93,170" Point2="93,186" />
+								<LineSegment Point="83,186" />
+							</PathFigure.Segments>
+						</PathFigure>
+					</PathGeometry>
+				</Path.Data>
+			</Path>
+		</Canvas>
+	</Grid>
 </Window>
