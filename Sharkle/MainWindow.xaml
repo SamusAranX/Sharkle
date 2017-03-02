@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Sharkle" xmlns:sharkle="clr-name"
-        mc:Ignorable="d" UseLayoutRounding="True" Background="Transparent" AllowsTransparency="True"
-        Title="MainWindow" Height="260" Width="240" ResizeMode="NoResize" WindowStyle="None" Topmost="True"
-		Loaded="Window_Loaded" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        xmlns:local="clr-namespace:Sharkle" Icon="sharkle.ico"
+        mc:Ignorable="d" Background="Gray" AllowsTransparency="True"
+        Title="MainWindow" Height="280" Width="256" ResizeMode="NoResize" WindowStyle="None" Topmost="True"
+		Loaded="Window_Loaded"
+		MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseRightButtonUp="Window_MouseRightButtonUp">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -16,6 +17,9 @@
 			<DropShadowEffect x:Key="SharkleShadow" Color="Black" Opacity="0.5" BlurRadius="8" Direction="270" ShadowDepth="3" />
 
 			<SineEase x:Key="SharkleEase" EasingMode="EaseInOut" />
+
+			<TranslateTransform x:Key="SharkleBodyTransform" />
+			<TranslateTransform x:Key="SharkleHatFinsTransform" />
 
 			<Storyboard x:Key="SharkleBubbleFlickerAnim" FillBehavior="Stop" RepeatBehavior="Forever">
 				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleBubble1" Storyboard.TargetProperty="Visibility">
@@ -36,33 +40,61 @@
 				</ObjectAnimationUsingKeyFrames>
 			</Storyboard>
 
-			<Storyboard x:Key="SharkleLegsIdleAnim">
-				<!-- Body bobbing up and down -->
-				<DoubleAnimation Storyboard.TargetName="SharkleBodyIdle" Storyboard.TargetProperty="(Canvas.Top)" To="16"
+			<Storyboard x:Key="SharkleIdleBodyAnim">
+				<!-- Animating those elements' RenderTransforms will animate all elements sharing the TranslateTransform resource -->
+				<!-- If you're not familiar with WPF: This is super not-obvious because the documentation is shit -->
+				<!-- If I wasn't so committed to this, I'd have roundhouse kicked my computer into low earth orbit by now -->
+				<DoubleAnimation Storyboard.TargetName="SharkleMainBody" Storyboard.TargetProperty="RenderTransform.Y" To="6" 
 					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
-				<DoubleAnimation Storyboard.TargetName="SharkleHatFinsIdle" Storyboard.TargetProperty="(Canvas.Top)" To="6"
-					Duration="0:0:0.4" BeginTime="0:0:0.1" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+				<DoubleAnimation Storyboard.TargetName="SharkleFinR" Storyboard.TargetProperty="RenderTransform.Y" By="6" 
+					Duration="0:0:0.4" BeginTime="0:0:0.11" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+			</Storyboard>
 
+			<Storyboard x:Key="SharkleIdleLegsAnim">
 				<!-- Animating the legs' start points -->
-				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[0].StartPoint" To="70, 155"
+				<PointAnimation Storyboard.TargetName="SharklePathLegs" Storyboard.TargetProperty="Data.Figures[0].StartPoint" To="104,166"
 					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
-				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[1].StartPoint" To="93, 155"
+				<PointAnimation Storyboard.TargetName="SharklePathLegs" Storyboard.TargetProperty="Data.Figures[1].StartPoint" To="130,166"
 					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
 
 				<!-- Animating the knees bending -->
-				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[0].Segments[0].Point1" To="50, 170"
+				<PointAnimation Storyboard.TargetName="SharklePathLegs" Storyboard.TargetProperty="Data.Figures[0].Segments[0].Point1" By="-24,0"
 					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
-				<PointAnimation Storyboard.TargetName="SharkleLegsIdle" Storyboard.TargetProperty="Data.Figures[1].Segments[0].Point1" To="73, 170"
+				<PointAnimation Storyboard.TargetName="SharklePathLegs" Storyboard.TargetProperty="Data.Figures[1].Segments[0].Point1" By="-24,0"
 					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+				<!--<PointAnimation Storyboard.TargetName="SharklePathLegs" Storyboard.TargetProperty="Data.Figures[0].Segments[0].Point1" To="74,180"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />
+				<PointAnimation Storyboard.TargetName="SharklePathLegs" Storyboard.TargetProperty="Data.Figures[1].Segments[0].Point1" To="100,180"
+					Duration="0:0:0.4" AutoReverse="True" RepeatBehavior="Forever" EasingFunction="{StaticResource SharkleEase}" />-->
+			</Storyboard>
+
+			<Storyboard x:Key="SharkleWavingAnim">
+
 			</Storyboard>
 		</ResourceDictionary>
 	</Window.Resources>
+	<!--<Window.Style>
+		<Style TargetType="Window">
+			<Style.Triggers>
+				<EventTrigger RoutedEvent="Loaded">
+					<BeginStoryboard x:Name="SharkleIdleBodyAnim" Storyboard="{StaticResource SharkleIdleBodyAnim}" />
+				</EventTrigger>
+			</Style.Triggers>
+		</Style>
+	</Window.Style>-->
 	<Window.Triggers>
 		<EventTrigger RoutedEvent="Loaded">
-			<BeginStoryboard Storyboard="{StaticResource SharkleLegsIdleAnim}" />
+			<BeginStoryboard x:Name="SharkleIdleBodyStoryboard" Storyboard="{StaticResource SharkleIdleBodyAnim}" />
+			<BeginStoryboard x:Name="SharkleIdleLegsStoryboard" Storyboard="{StaticResource SharkleIdleLegsAnim}" />
+
 			<BeginStoryboard x:Name="SharkleBubbleFlickerStoryboard" Storyboard="{StaticResource SharkleBubbleFlickerAnim}" />
 		</EventTrigger>
 		<EventTrigger RoutedEvent="MouseLeftButtonDown">
+			<!--<SoundPlayerAction Source="{Binding HeySource}" />-->
+
+			<!--<PauseStoryboard BeginStoryboardName="SharkleIdleBodyAnim2" />-->
+
+			<!-- Manually rewind that storyboard to the beginning because I am sick of WPF's bullshit -->
 			<SeekStoryboard BeginStoryboardName="SharkleBubbleFlickerStoryboard" Offset="0:0:0" Origin="BeginTime" />
 			<BeginStoryboard Storyboard="{StaticResource SharkleShowBubblesAnim}" />
 		</EventTrigger>
@@ -71,47 +103,93 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition />
-			<RowDefinition Height="190" />
-			<RowDefinition Height="14" />
+			<RowDefinition Height="208" />
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
-			<ColumnDefinition Width="140" />
+			<ColumnDefinition Width="160" />
 		</Grid.ColumnDefinitions>
 
 		<Canvas x:Name="SharkleBubbles" Effect="{StaticResource SharkleShadow}" Visibility="Hidden">
-			<Image x:Name="SharkleBubble1" Source="{StaticResource SharkleBubble1}" Visibility="Hidden" />
-			<Image x:Name="SharkleBubble2" Source="{StaticResource SharkleBubble2}" Visibility="Hidden" Canvas.Left="9" Canvas.Top="9" />
+			<Image x:Name="SharkleBubble1" Stretch="None" Source="{StaticResource SharkleBubble1}" Visibility="Hidden" />
+			<Image x:Name="SharkleBubble2" Stretch="None" Source="{StaticResource SharkleBubble2}" Visibility="Hidden" Canvas.Left="9" Canvas.Top="11" />
 		</Canvas>
 
-		<Canvas x:Name="SharkleIdle" Effect="{StaticResource SharkleShadow}" Grid.Row="1" Grid.Column="1">
-			<Canvas.Triggers>
-				<EventTrigger RoutedEvent="MouseDown">
-					
-				</EventTrigger>
-			</Canvas.Triggers>
+		<!--<Canvas Grid.Row="1" Grid.Column="1">
+			<Image Source="{StaticResource SharkleTestBody}" Effect="{StaticResource SharkleShadow}"
+				Stretch="None" />
+		</Canvas>-->
 
-			<Image x:Name="SharkleBodyIdle" Source="{StaticResource SharkleBodyIdle}" Canvas.Left="3" Canvas.Top="11" />
-			<Image x:Name="SharkleHatFinsIdle" Source="{StaticResource SharkleHatFinsIdle}" Canvas.Left="35" Canvas.Top="-1" />
-			<Path x:Name="SharkleLegsIdle" Stroke="{DynamicResource SharkleFillBrush}" StrokeThickness="4" StrokeEndLineCap="Round" StrokeStartLineCap="Round" StrokeLineJoin="Round">
-				<Path.Data>
-					<PathGeometry>
-						<PathFigure StartPoint="70,150">
-							<PathFigure.Segments>
-								<QuadraticBezierSegment Point1="70,170" Point2="70,186" />
-								<LineSegment Point="60,186" />
-							</PathFigure.Segments>
-						</PathFigure>
+		<TextBlock x:Name="tbTest" Grid.Row="1" Text="test0" HorizontalAlignment="Center" VerticalAlignment="Center" 
+			FontSize="24" FontFamily="SF Mono" />
 
-						<PathFigure StartPoint="93,150">
-							<PathFigure.Segments>
-								<QuadraticBezierSegment Point1="93,170" Point2="93,186" />
-								<LineSegment Point="83,186" />
-							</PathFigure.Segments>
-						</PathFigure>
-					</PathGeometry>
-				</Path.Data>
-			</Path>
+		<Canvas x:Name="SharkleBody" Grid.Column="1" Grid.Row="1" Effect="{StaticResource SharkleShadow}" Margin="-24,-4,0,0">
+			<Canvas x:Name="SharkleFinR" RenderTransform="{StaticResource SharkleHatFinsTransform}">
+				<!-- The right fin needs to be under the body or else the fill looks weird -->
+				<Path Fill="{DynamicResource SharkleBGBrush}" Data="{StaticResource SharklePathFinR}" />
+			</Canvas>
+			<Path x:Name="SharklePathLegs" Data="{StaticResource SharklePathLegs}" />
+			<Canvas x:Name="SharkleMainBody" RenderTransform="{StaticResource SharkleBodyTransform}">
+				<!-- The dorsal fin and the teeth need to be under the body for the same reasons as the right fin -->
+				<Path Fill="{DynamicResource SharkleBGBrush}" Data="{StaticResource SharklePathFinBack}" />
+				<Path Fill="{DynamicResource SharkleBGBrush}" Data="{StaticResource SharklePathTeeth}" />
+				<Path Fill="{DynamicResource SharkleBGBrush}" Data="{StaticResource SharklePathBody}"  />
+				<Path Data="{StaticResource SharklePathGills}" />
+				<Path Data="{StaticResource SharklePathEye}" />
+				<Path Data="{StaticResource SharklePathPupil}" />
+			</Canvas>
+			<Canvas RenderTransform="{StaticResource SharkleHatFinsTransform}">
+				<Path Fill="{DynamicResource SharkleBGBrush}" Data="{StaticResource SharklePathHat}" />
+				<Path Data="{StaticResource SharklePathFinL}" />
+			</Canvas>
+			
 		</Canvas>
+		
+		<!--<Canvas x:Name="SharkleWaving" Effect="{StaticResource SharkleShadow}" Grid.Row="1" Grid.Column="1">
+			<Canvas.Resources>
+				<Duration x:Key="AnimDuration">0:0:0.45</Duration>
+				<KeyTime x:Key="AnimKeyTime1">0:0:0.00</KeyTime>
+				<KeyTime x:Key="AnimKeyTime2">0:0:0.10</KeyTime>
+				<KeyTime x:Key="AnimKeyTime3">0:0:0.20</KeyTime>
+				<KeyTime x:Key="AnimKeyTime4">0:0:0.30</KeyTime>
+			</Canvas.Resources>
+			<Image>
+				<Image.Triggers>
+					<EventTrigger RoutedEvent="Loaded">
+						<BeginStoryboard>
+							<Storyboard RepeatBehavior="Forever">
+								<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Source" Duration="{StaticResource AnimDuration}">
+									<DiscreteObjectKeyFrame KeyTime="{StaticResource AnimKeyTime1}" Value="{StaticResource SharkleWave0}" />
+									<DiscreteObjectKeyFrame KeyTime="{StaticResource AnimKeyTime2}" Value="{StaticResource SharkleWave1}" />
+									<DiscreteObjectKeyFrame KeyTime="{StaticResource AnimKeyTime3}" Value="{StaticResource SharkleWave2}" />
+									<DiscreteObjectKeyFrame KeyTime="{StaticResource AnimKeyTime4}" Value="{StaticResource SharkleWave3}" />
+								</ObjectAnimationUsingKeyFrames>
+
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Left)" Duration="{StaticResource AnimDuration}">
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime1}" Value="2.5" />
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime2}" Value="0.5" />
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime3}" Value="-2" />
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime4}" Value="0" />
+								</DoubleAnimationUsingKeyFrames>
+
+								--><!--<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Top)" Duration="{StaticResource AnimDuration}">
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime1}" Value="-0.5" />
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime2}" Value="-0.5" />
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime3}" Value="-0.5" />
+									<DiscreteDoubleKeyFrame KeyTime="{StaticResource AnimKeyTime4}" Value="-0.5" />
+								</DoubleAnimationUsingKeyFrames>--><!--
+
+								<StringAnimationUsingKeyFrames Storyboard.TargetName="tbTest" Storyboard.TargetProperty="Text" Duration="{StaticResource AnimDuration}">
+									<DiscreteStringKeyFrame KeyTime="{StaticResource AnimKeyTime1}" Value="test0" />
+									<DiscreteStringKeyFrame KeyTime="{StaticResource AnimKeyTime2}" Value="test1" />
+									<DiscreteStringKeyFrame KeyTime="{StaticResource AnimKeyTime3}" Value="test2" />
+									<DiscreteStringKeyFrame KeyTime="{StaticResource AnimKeyTime4}" Value="test3" />
+								</StringAnimationUsingKeyFrames>
+							</Storyboard>
+						</BeginStoryboard>
+					</EventTrigger>
+				</Image.Triggers>
+			</Image>
+		</Canvas>-->
 	</Grid>
 </Window>
