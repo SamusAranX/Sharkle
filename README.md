@@ -3,6 +3,7 @@ Hey!
 
 ## Features
 * Believes in you
+* Behaves just like in *Night in the Woods*
 * Says "Hey" when you click on him
 
 ## Requirements
