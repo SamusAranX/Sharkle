@@ -1,0 +1,162 @@
+﻿<Window x:Class="Sharkle.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:Sharkle"
+        mc:Ignorable="d" Loaded="Window_Loaded"
+        Title="About Sharkle" Icon="sharkle.ico" Height="286" Width="420"
+		ResizeMode="NoResize" Foreground="White" UseLayoutRounding="True"
+		TextOptions.TextFormattingMode="Display" TextOptions.TextHintingMode="Fixed" TextOptions.TextRenderingMode="Auto">
+	<Window.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="SharkleImages.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+
+			<!-- This Window's background brush -->
+			<VisualBrush x:Key="BlueprintBrush" TileMode="Tile"
+				Viewport="0,0,12,12" 
+				ViewportUnits="Absolute">
+				<VisualBrush.Visual>
+					<Border Background="#0275EA" Width="20" Height="20">
+						<Border BorderBrush="#50FFFFFF" BorderThickness="1,1,0,0" Width="20" Height="20" />
+					</Border>
+				</VisualBrush.Visual>
+			</VisualBrush>
+
+			<DropShadowEffect x:Key="TextShadow" Color="Black" Opacity="0.75" BlurRadius="3" Direction="270" ShadowDepth="2" />
+			<DropShadowEffect x:Key="SharkleShadow" Color="Black" Opacity="0.66" BlurRadius="8" Direction="270" ShadowDepth="3" />
+
+			<Duration x:Key="LoopDuration">0:0:0.4</Duration>
+			<sys:TimeSpan x:Key="LoopOffset">0:0:0.4</sys:TimeSpan>
+
+			<!-- Exactly what it says on the tin -->
+			<Storyboard x:Key="SharkleWavingAnim" RepeatBehavior="Forever">
+				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleWavingBody" Storyboard.TargetProperty="Data" Duration="{StaticResource LoopDuration}">
+					<DiscreteObjectKeyFrame KeyTime="0%" Value="{StaticResource SharklePathBody0}" />
+					<DiscreteObjectKeyFrame KeyTime="25%" Value="{StaticResource SharklePathBody1}" />
+					<DiscreteObjectKeyFrame KeyTime="50%" Value="{StaticResource SharklePathBody2}" />
+					<DiscreteObjectKeyFrame KeyTime="75%" Value="{StaticResource SharklePathBody3}" />
+				</ObjectAnimationUsingKeyFrames>
+
+				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleWavingTeeth" Storyboard.TargetProperty="Data" Duration="{StaticResource LoopDuration}">
+					<DiscreteObjectKeyFrame KeyTime="0%" Value="{StaticResource SharklePathTeeth0}" />
+					<DiscreteObjectKeyFrame KeyTime="25%" Value="{StaticResource SharklePathTeeth1}" />
+					<DiscreteObjectKeyFrame KeyTime="50%" Value="{StaticResource SharklePathTeeth2}" />
+					<DiscreteObjectKeyFrame KeyTime="75%" Value="{StaticResource SharklePathTeeth3}" />
+				</ObjectAnimationUsingKeyFrames>
+
+				<ObjectAnimationUsingKeyFrames Storyboard.TargetName="SharkleWavingFinR" Storyboard.TargetProperty="Data" Duration="{StaticResource LoopDuration}">
+					<DiscreteObjectKeyFrame KeyTime="0%" Value="{StaticResource SharklePathFinR0}" />
+					<DiscreteObjectKeyFrame KeyTime="25%" Value="{StaticResource SharklePathFinR1}" />
+					<DiscreteObjectKeyFrame KeyTime="50%" Value="{StaticResource SharklePathFinR2}" />
+					<DiscreteObjectKeyFrame KeyTime="75%" Value="{StaticResource SharklePathFinR3}" />
+				</ObjectAnimationUsingKeyFrames>
+			</Storyboard>
+
+			<!-- Hyperlink style that improves on WPF's default shitty one -->
+			<Style TargetType="Hyperlink">
+				<Setter Property="Foreground" Value="White"/>
+				<Setter Property="FontWeight" Value="Bold" />
+				<Setter Property="TextDecorations" Value="Underline"/>
+				<Style.Triggers>
+					<Trigger Property="IsMouseOver" Value="True">
+						<Setter Property="Foreground" Value="#BBFFFFFF"/>
+					</Trigger>
+					<EventTrigger RoutedEvent="Hyperlink.MouseDown">
+						<BeginStoryboard>
+							<Storyboard>
+								<ColorAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="Foreground.Color">
+									<DiscreteColorKeyFrame KeyTime="0" Value="#BBFFFFFF" />
+								</ColorAnimationUsingKeyFrames>
+							</Storyboard>
+						</BeginStoryboard>
+					</EventTrigger>
+				</Style.Triggers>
+			</Style>
+		</ResourceDictionary>
+	</Window.Resources>
+	<Window.Triggers>
+		<EventTrigger RoutedEvent="Loaded">
+			<BeginStoryboard Storyboard="{StaticResource SharkleWavingAnim}" />
+		</EventTrigger>
+	</Window.Triggers>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition />
+			<ColumnDefinition Width="160" />
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition />
+			<RowDefinition Height="198" />
+		</Grid.RowDefinitions>
+
+		<!-- Window background -->
+		<Border Grid.ColumnSpan="2" Grid.RowSpan="3" Background="{StaticResource BlueprintBrush}" />
+
+		<!-- "Sharkle v1.0.0" banner -->
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+			<TextBlock Text="Sharkle" Effect="{StaticResource TextShadow}" FontSize="32" FontWeight="Medium" VerticalAlignment="Center" HorizontalAlignment="Right" />
+			<TextBlock Text="{Binding CurrentVersion, Mode=OneWay, StringFormat=v{0}, FallbackValue=v0.0.0}"
+				Grid.Column="1" FontSize="15" FontStyle="Italic" Effect="{StaticResource TextShadow}"
+				Margin="2,-20,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+		</StackPanel>
+
+		<!-- Grid containing two TextBlocks -->
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
+				<RowDefinition />
+				<RowDefinition Height="50" />
+			</Grid.RowDefinitions>
+
+			<TextBlock x:Name="AboutText" TextWrapping="Wrap" Padding="10,5" Effect="{StaticResource TextShadow}">
+				<Run>Inspired by</Run>
+				<Hyperlink NavigateUri="{Binding Hyperlinks[0]}" RequestNavigate="Hyperlink_RequestNavigate">
+					<Run>Night in the Woods</Run>
+				</Hyperlink><Run>'s Sharkle.</Run><LineBreak />
+				<Run>For a relatively spoiler-free explanation, watch this part of</Run>
+				<Hyperlink NavigateUri="{Binding Hyperlinks[1]}" RequestNavigate="Hyperlink_RequestNavigate">
+					Jesse Cox's playthrough
+				</Hyperlink> <Run>from ~1:34:30 to ~1:35:00.</Run>
+				<LineBreak /><LineBreak />
+				<Run>Want the source?</Run>
+				<Hyperlink NavigateUri="{Binding Hyperlinks[2]}" RequestNavigate="Hyperlink_RequestNavigate">Get it on GitHub!</Hyperlink>
+				<LineBreak />
+				<Run>Found bugs?</Run>
+				<Hyperlink NavigateUri="{Binding Hyperlinks[3]}" RequestNavigate="Hyperlink_RequestNavigate">Tell me!</Hyperlink>
+				<LineBreak />
+				<Run>Got general praise?</Run>
+				<Hyperlink NavigateUri="{Binding Hyperlinks[4]}" RequestNavigate="Hyperlink_RequestNavigate">Find me on Twitter!</Hyperlink>
+			</TextBlock>
+
+			<TextBlock x:Name="AboutFooter" Grid.Row="1" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource TextShadow}">
+				<Run>A project by</Run>
+				<Hyperlink NavigateUri="{Binding Hyperlinks[5]}" RequestNavigate="Hyperlink_RequestNavigate">
+					<Run>Peter Wunder</Run>
+				</Hyperlink><Run>, 2017</Run>
+			</TextBlock>
+		</Grid>
+		
+		<!-- Waving Sharkle -->
+		<Canvas x:Name="SharkleBodyWaving" Grid.Column="2" Grid.Row="2" Margin="-24,0,0,0" 
+			Effect="{StaticResource SharkleShadow}">
+			<Path x:Name="SharkleWavingFinR" Fill="White" Data="{StaticResource SharklePathFinR0}" />
+
+			<Path Fill="White" Data="{StaticResource SharklePathFinBack}" />
+			<Path x:Name="SharkleWavingTeeth" Fill="White" Data="{StaticResource SharklePathTeeth0}" />
+
+			<Path Data="{StaticResource SharklePathLegsStatic}" />
+
+			<Path x:Name="SharkleWavingBody" Fill="White" Data="{StaticResource SharklePathBody0}" />
+
+			<Path Data="{StaticResource SharklePathEyeSmiling}" />
+			<Path Data="{StaticResource SharklePathPupil}" />
+
+			<Path Data="{StaticResource SharklePathGills}" />
+			<Path Fill="White" Data="{StaticResource SharklePathHat}" />
+			<Path Data="{StaticResource SharklePathFinL}" />
+		</Canvas>
+    </Grid>
+</Window>
