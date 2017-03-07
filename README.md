@@ -6,7 +6,7 @@ Hey!
 * Says "Hey" when you click on him
 
 ## Requirements
-* At least Windows 7 with SP 1
+* At least Windows 7 with SP1
   * I recommend Windows 10 though, there's like zero reasons not to upgrade
   * *No, get outta here with that conspiracy crap*
 * [.NET Framework 4.6.2](https://www.microsoft.com/en-us/download/details.aspx?id=53344)
