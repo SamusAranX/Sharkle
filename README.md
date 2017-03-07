@@ -6,6 +6,9 @@ Hey!
 * Behaves just like in *Night in the Woods*
 * Says "Hey" when you click on him
 
+## Download
+Download Sharkle over on the [Releases tab](https://github.com/SamusAranX/Sharkle/releases).
+
 ## Requirements
 * At least Windows 7 with SP1
   * I recommend Windows 10 though, there's like zero reasons not to upgrade
