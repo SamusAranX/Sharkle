@@ -5,6 +5,7 @@ Hey!
 * Believes in you
 * Behaves just like in *Night in the Woods*
 * Says "Hey" when you click on him
+* [Also available for macOS](https://github.com/SamusAranX/Sharkle-for-Mac)
 
 ## Download
 Download Sharkle over on the [Releases tab](https://github.com/SamusAranX/Sharkle/releases).
