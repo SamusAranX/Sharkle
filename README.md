@@ -6,6 +6,7 @@ Hey!
 * Behaves just like in *Night in the Woods*
 * Says "Hey" when you click on him
 * Looks crisp even on those newfangled high-DPI screens (this might require Windows 10)
+* [Also available for macOS](https://github.com/SamusAranX/Sharkle-for-Mac)
 
 ## Download
 Download Sharkle over on the [Releases tab](https://github.com/SamusAranX/Sharkle/releases).
