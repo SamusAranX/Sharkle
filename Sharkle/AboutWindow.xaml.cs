@@ -22,7 +22,7 @@ namespace Sharkle {
 	/// </summary>
 	public partial class AboutWindow : Window {
 		public AboutWindow() {
-			InitializeComponent();
+			this.InitializeComponent();
 			this.DataContext = this;
 		}
 
@@ -35,28 +35,19 @@ namespace Sharkle {
 				return version.ToString(3);
 			}
 		}
+        public Array Hyperlinks { get; } = new[] {
+            new Uri("http://www.nightinthewoods.com/"),
+            new Uri("https://www.youtube.com/watch?v=d86WnX_271U&feature=youtu.be&t=1h34m30s"),
+            new Uri("https://github.com/SamusAranX/Sharkle/"),
+            new Uri("https://github.com/SamusAranX/Sharkle/issues"),
+            new Uri("https://twitter.com/SamusAranX"),
+            new Uri("https://peterwunder.de"),
+        };
 
-		private Array _hyperlinks = new[] {
-			new Uri("http://www.nightinthewoods.com/"),
-			new Uri("https://www.youtube.com/watch?v=d86WnX_271U&feature=youtu.be&t=1h34m30s"),
-			new Uri("https://github.com/SamusAranX/Sharkle/"),
-			new Uri("https://github.com/SamusAranX/Sharkle/issues"),
-			new Uri("https://twitter.com/SamusAranX"),
-			new Uri("https://peterwunder.de"),
-		};
-		public Array Hyperlinks {
-			get {
-				return _hyperlinks;
-			}
-		}
-
-		public Color WindowGlassColor {
+        public Color WindowGlassColor {
 			get {
 				return SystemParameters.WindowGlassColor;
 			}
-		}
-
-		private void Window_Loaded(object sender, RoutedEventArgs e) {
 		}
 
 		private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e) {

@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
 		xmlns:tb="http://www.hardcodet.net/taskbar"
-        xmlns:local="clr-namespace:Sharkle" Icon="sharkle.ico"
+        ShowInTaskbar="False"
         mc:Ignorable="d" Background="Transparent" AllowsTransparency="True"
-        Title="MainWindow" Height="280" Width="256" ResizeMode="NoResize" WindowStyle="None" Topmost="True"
-		Loaded="Window_Loaded" UseLayoutRounding="True"
-		MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseRightButtonUp="Window_MouseRightButtonUp">
+        Title="Sharkle" Height="280" Width="256" ResizeMode="NoResize" WindowStyle="None"
+		Loaded="Window_Loaded" UseLayoutRounding="True" Icon="sharkle.ico"
+		MouseLeftButtonDown="Window_MouseLeftButtonDown">
 	<Window.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>

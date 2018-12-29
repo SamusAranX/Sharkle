@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:local="clr-namespace:Sharkle"
-        mc:Ignorable="d" Loaded="Window_Loaded"
+        mc:Ignorable="d"
         Title="About Sharkle" Icon="sharkle.ico" Height="286" Width="420"
 		ResizeMode="NoResize" Foreground="White" UseLayoutRounding="True"
 		TextOptions.TextFormattingMode="Display" TextOptions.TextHintingMode="Fixed" TextOptions.TextRenderingMode="Auto">
@@ -116,9 +115,9 @@
 				<Hyperlink NavigateUri="{Binding Hyperlinks[0]}" RequestNavigate="Hyperlink_RequestNavigate">
 					<Run>Night in the Woods</Run>
 				</Hyperlink><Run>'s Sharkle.</Run><LineBreak />
-				<Run>For a relatively spoiler-free explanation, watch this part of</Run>
+				<Run>For a relatively spoiler-free explanation, watch</Run>
 				<Hyperlink NavigateUri="{Binding Hyperlinks[1]}" RequestNavigate="Hyperlink_RequestNavigate">
-					Jesse Cox's playthrough
+					 this part of Jesse Cox's playthrough
 				</Hyperlink> <Run>from ~1:34:30 to ~1:35:00.</Run>
 				<LineBreak /><LineBreak />
 				<Run>Want the source?</Run>
@@ -135,7 +134,7 @@
 				<Run>A project by</Run>
 				<Hyperlink NavigateUri="{Binding Hyperlinks[5]}" RequestNavigate="Hyperlink_RequestNavigate">
 					<Run>Peter Wunder</Run>
-				</Hyperlink><Run>, 2017</Run>
+				</Hyperlink><Run>, 2017–2018</Run>
 			</TextBlock>
 		</Grid>
 		

@@ -5,6 +5,7 @@ Hey!
 * Believes in you
 * Behaves just like in *Night in the Woods*
 * Says "Hey" when you click on him
+* Looks crisp even on those newfangled high-DPI screens (this might require Windows 10)
 
 ## Download
 Download Sharkle over on the [Releases tab](https://github.com/SamusAranX/Sharkle/releases).
